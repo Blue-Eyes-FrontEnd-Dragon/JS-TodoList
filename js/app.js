@@ -60,6 +60,7 @@ function addTask(e) {
 
     if (taskInput.value === '') {
         alert('Add a task');
+        return;
     }
 
     const li = document.createElement('li');
