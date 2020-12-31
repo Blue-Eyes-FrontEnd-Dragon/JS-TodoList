@@ -60,26 +60,26 @@ function addTask(e) {
 
     if (taskInput.value === '') {
         alert('Add a task');
-        return;
+        
+    } else {
+        const li = document.createElement('li');
+        li.className = 'collection-item';
+    
+        // create text node and append to li
+        li.appendChild(document.createTextNode(taskInput.value));
+    
+        const link = document.createElement('a');
+        link.className = 'delete-item secondary-content';
+    
+        // Add icon html
+        link.innerHTML = '<i class="fa fa-remove"></i>';
+        li.appendChild(link);
+    
+        taskList.appendChild(li);
+    
+        // Store in LocalStorage
+        storeTaskInLocalStorage(taskInput.value);
     }
-
-    const li = document.createElement('li');
-    li.className = 'collection-item';
-
-    // create text node and append to li
-    li.appendChild(document.createTextNode(taskInput.value));
-
-    const link = document.createElement('a');
-    link.className = 'delete-item secondary-content';
-
-    // Add icon html
-    link.innerHTML = '<i class="fa fa-remove"></i>';
-    li.appendChild(link);
-
-    taskList.appendChild(li);
-
-    // Store in LocalStorage
-    storeTaskInLocalStorage(taskInput.value);
 
     // clear input
     taskInput.value = '';
