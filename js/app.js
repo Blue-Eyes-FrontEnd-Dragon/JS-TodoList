@@ -9,6 +9,8 @@ const taskInput = document.querySelector('#task');
 loadEventListeners();
 
 function loadEventListeners() {
+    // DOM Load Event
+    document.addEventListener('DOMContentLoaded', getTasks);
     // Add task event
     form.addEventListener('submit', addTask);
     // Remove task event
@@ -17,6 +19,41 @@ function loadEventListeners() {
     clearBtn.addEventListener('click', clearTasks);
     // Filter task event
     filter.addEventListener('keyup', filterTasks);
+}
+
+// Get tasks from LocalStorage
+function getTasks(e) {
+
+    console.log('Hello');
+    let tasks;
+    if (localStorage.getItem('tasks') === null) {
+        tasks = [];
+    } else {
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+
+    console.log('working');
+
+    tasks.forEach(
+       (task) => {
+            // Create new li
+            const li = document.createElement('li');
+            // Add class to li
+            li.className = 'collection-item';
+            // Append textNode to li
+            li.appendChild(document.createTextNode(task));
+            // Create new link
+            const link = document.createElement('a');
+            // Add classes to link
+            link.className('delete-item secondary-content');
+            // Set link icon
+            link.innerHTML = '<i class="fa fa-remove"></i>';
+            // Append link to li
+            li.appendChild(link);
+            // Append li to taskList
+            taskList.appendChild(li);
+        }
+    );
 }
 
 function addTask(e) {
@@ -40,10 +77,26 @@ function addTask(e) {
 
     taskList.appendChild(li);
 
+    // Store in LocalStorage
+    storeTaskInLocalStorage(taskInput.value);
+
     // clear input
     taskInput.value = '';
 
     e.preventDefault();
+}
+
+function storeTaskInLocalStorage(task) {
+    let tasks;
+    if (localStorage.getItem('tasks') === null) {
+        tasks = [];
+    } else {
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+
+    tasks.push(task);
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 function removeTask(e) {
@@ -53,8 +106,26 @@ function removeTask(e) {
         // of that is the <li> which we want to remove
         if (confirm('Are You Sure?')) {
             e.target.parentElement.parentElement.remove();
+            removeTaskFromLocalStorage(e.target.parentElement.parentElement);
         }
     }
+}
+
+function removeTaskFromLocalStorage(taskItem) {
+    let tasks;
+    if (localStorage.getItem('tasks') === null) {
+        tasks = [];
+    } else {
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+
+    tasks.forEach((task, index) => {
+        if (taskItem.textContent === task) {
+            tasks.splice(idex, 1);
+        }
+    });
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 function clearTasks(e) {
